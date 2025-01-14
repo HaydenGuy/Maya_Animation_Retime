@@ -9,7 +9,7 @@ class Animation_Retime(QMainWindow):
         super().__init__()
 
         self.UI = anim_ui.Animation_Retime_UI()
-        self.setCentralWidget(self.ui)
+        self.setCentralWidget(self.UI)
 
         self.UI.button.pressed.connect(self.button_pressed)
 
