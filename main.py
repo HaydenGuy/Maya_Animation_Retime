@@ -2,13 +2,13 @@ import sys
 from maya import cmds
 
 from PySide6.QtWidgets import QMainWindow, QApplication
-import UI.animation_retime_ui as anim_ui
+import Animation_Retime.UI.ui as ui
 
 class Animation_Retime(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.UI = anim_ui.Animation_Retime_UI()
+        self.UI = ui.Animation_Retime_UI()
         self.setCentralWidget(self.UI)
 
         self.UI.button.pressed.connect(self.button_pressed)
