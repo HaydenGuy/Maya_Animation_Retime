@@ -12,9 +12,13 @@ class Animation_Retime(QMainWindow):
         self.setCentralWidget(self.UI)
 
         self.UI.zero_0_btn.pressed.connect(self.button_pressed)
+        self.UI.slider.valueChanged.connect(self.slider_test)
 
     def button_pressed(self):
         cmds.polySphere()
+
+    def slider_test(self):
+        cmds.polyCone()
 
 if __name__ == '__main__':
     # Create a Qt application instance or use the existing one
