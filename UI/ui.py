@@ -1,4 +1,5 @@
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QSlider
+from PySide6.QtGui import Qt
 
 class Animation_Retime_UI(QWidget):
     def __init__(self):
@@ -27,4 +28,11 @@ class Animation_Retime_UI(QWidget):
         for btn in buttons:
             button_layout.addWidget(btn)
 
+        self.slider = QSlider()
+        self.slider.setOrientation(Qt.Horizontal)
+        self.slider.setMinimum(-100)
+        self.slider.setMaximum(100)
+        self.slider.setValue(0)
+
         main_layout.addLayout(button_layout)
+        main_layout.addWidget(self.slider)
