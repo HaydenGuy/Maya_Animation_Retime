@@ -11,7 +11,7 @@ class Animation_Retime(QMainWindow):
         self.UI = ui.Animation_Retime_UI()
         self.setCentralWidget(self.UI)
 
-        self.UI.button.pressed.connect(self.button_pressed)
+        self.UI.zero_0_btn.pressed.connect(self.button_pressed)
 
     def button_pressed(self):
         cmds.polySphere()
