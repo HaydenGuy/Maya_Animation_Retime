@@ -29,7 +29,7 @@ class Animation_Retime_UI(QWidget):
             button_layout.addWidget(btn)
 
         self.slider = QSlider()
-        self.slider.setOrientation(Qt.Horizontal)
+        self.slider.setOrientation()
         self.slider.setMinimum(-100)
         self.slider.setMaximum(100)
         self.slider.setValue(0)
