@@ -11,13 +11,26 @@ class Animation_Retime(QMainWindow):
         self.UI = ui.Animation_Retime_UI()
         self.setCentralWidget(self.UI)
 
-        self.UI.zero_0_btn.pressed.connect(self.button_pressed)
-        self.UI.slider.valueChanged.connect(self.slider_test)
+        self.UI.neg_100_btn.clicked.connect(self.button_pressed)
+        self.UI.neg_50_btn.clicked.connect(self.button_pressed)
+        self.UI.neg_10_btn.clicked.connect(self.button_pressed)
+        self.UI.neg_1_btn.clicked.connect(self.button_pressed)
+        self.UI.zero_0_btn.clicked.connect(self.button_pressed)
+        self.UI.pos_1_btn.clicked.connect(self.button_pressed)
+        self.UI.pos_10_btn.clicked.connect(self.button_pressed)
+        self.UI.pos_50_btn.clicked.connect(self.button_pressed)
+        self.UI.pos_100_btn.clicked.connect(self.button_pressed)
+
+        self.UI.slider.valueChanged.connect(self.slider_change)
 
     def button_pressed(self):
-        cmds.polySphere()
+        button = self.sender() # Gets the button clicked
+        button_value = int(button.text()) # Value of button is text converted to int
+        current_frame = int(cmds.currentTime(query=True)) # Gets the current time
+        new_frame = current_frame + button_value # Adds clicked button value to current frame
+        cmds.keyframe(time=(current_frame,), timeChange=new_frame) # Updates the current frame to the new frame
 
-    def slider_test(self):
+    def slider_change(self):
         cmds.polyCone()
 
 if __name__ == '__main__':
