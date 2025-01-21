@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QSlider, QFrame
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QSlider, QFrame, QSpacerItem
 from PySide6.QtGui import Qt
 
 class Animation_Retime_UI(QWidget):
@@ -17,6 +17,7 @@ class Animation_Retime_UI(QWidget):
         self.neg_50_btn = QPushButton("-50")
         self.neg_10_btn = QPushButton("-10")
         self.neg_1_btn = QPushButton("-1")
+
         self.pos_1_btn = QPushButton("1")
         self.pos_10_btn = QPushButton("10")
         self.pos_50_btn = QPushButton("50")
@@ -29,12 +30,19 @@ class Animation_Retime_UI(QWidget):
         # Set the thickness of the line
         vertical_line.setStyleSheet("QFrame { background-color: #262626; width: 5px; }")
         
-        buttons = [self.neg_100_btn, self.neg_50_btn, self.neg_10_btn, self.neg_1_btn,
-                   vertical_line, self.pos_1_btn, self.pos_10_btn, self.pos_50_btn, self.pos_100_btn]
+        negative_buttons = [self.neg_100_btn, self.neg_50_btn, self.neg_10_btn, self.neg_1_btn]
+        positive_buttons = [self.pos_1_btn, self.pos_10_btn, self.pos_50_btn, self.pos_100_btn]
 
         # Add buttons and line to layout
-        for btn in buttons:
+        for btn in negative_buttons:
             button_layout.addWidget(btn)
+
+        button_layout.addWidget(vertical_line)
+
+        for btn in positive_buttons:
+            button_layout.addWidget(btn)
+
+        button_layout.addSpacerItem(QSpacerItem(15, 0))
 
         # Create horizontal slider with max 100 min -100
         self.slider = QSlider()
