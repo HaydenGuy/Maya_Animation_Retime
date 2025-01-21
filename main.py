@@ -29,6 +29,7 @@ class Animation_Retime(QMainWindow):
         current_frame = int(cmds.currentTime(query=True)) # Gets the current time
         new_frame = current_frame + button_value # Adds clicked button value to current frame
         cmds.keyframe(time=(current_frame,), timeChange=new_frame) # Updates the current frame to the new frame
+        cmds.currentTime(new_frame) # Set time to updated frame
 
     def slider_change(self):
         cmds.polyCone()
