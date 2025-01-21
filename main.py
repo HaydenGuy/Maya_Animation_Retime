@@ -20,6 +20,8 @@ class Animation_Retime(QMainWindow):
         self.UI.pos_50_btn.clicked.connect(self.button_pressed)
         self.UI.pos_100_btn.clicked.connect(self.button_pressed)
 
+        self.prev_slider_val = 0
+
         self.UI.slider.valueChanged.connect(self.slider_change)
 
     def button_pressed(self):
@@ -32,6 +34,20 @@ class Animation_Retime(QMainWindow):
 
     def slider_change(self, value):
         self.UI.slider_label.setText(f"{value}")
+        current_frame = int(cmds.currentTime(query=True))
+        
+        # Not working as intended - Slider can be moved need to add logic to decrease by x steps if slider value is clicked
+        # Need to add a check to reset the slider when a new object is selected
+        if value > self.prev_slider_val:
+            time_change = 1
+        elif value < self.prev_slider_val:
+            time_change = -1
+        else:
+            time_change = 0
+
+        new_frame = current_frame + time_change
+        cmds.currentTime(new_frame)
+        self.prev_slider_val = value
 
 if __name__ == '__main__':
     # Create a Qt application instance or use the existing one
