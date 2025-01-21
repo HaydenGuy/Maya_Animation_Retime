@@ -24,12 +24,12 @@ class Animation_Retime_UI(QWidget):
         self.pos_50_btn = QPushButton("+50")
         self.pos_100_btn = QPushButton("+100")
 
-        # Create horizontal slider with max 100 min -100
+        # Create horizontal slider with range -100 to 100
         self.slider = QSlider()
-        self.slider.setOrientation(Qt.Horizontal)
-        self.slider.setMinimum(-100)
-        self.slider.setMaximum(100)
-        self.slider.setValue(0)
+        self.slider.setRange(-100, 100)
+        self.slider.setOrientation(Qt.Horizontal) # Slider orientation
+        self.slider.setSingleStep(1) # Set the step size to 1 
+        self.slider.setValue(0) # Starting value
 
         # Create a slider label with a grey background and white text
         self.slider_label = QLabel("0")
