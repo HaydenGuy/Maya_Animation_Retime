@@ -30,8 +30,8 @@ class Animation_Retime(QMainWindow):
         cmds.keyframe(time=(current_frame,), timeChange=new_frame) # Updates the current frame to the new frame
         cmds.currentTime(new_frame) # Set time to updated frame
 
-    def slider_change(self):
-        cmds.polyCone()
+    def slider_change(self, value):
+        self.UI.slider_label.setText(f"{value}")
 
 if __name__ == '__main__':
     # Create a Qt application instance or use the existing one
