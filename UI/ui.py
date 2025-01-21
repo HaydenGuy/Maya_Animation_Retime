@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QSlider, QFrame, QSpacerItem
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QSlider, QLabel
 from PySide6.QtGui import Qt
 
 class Animation_Retime_UI(QWidget):
@@ -9,7 +9,6 @@ class Animation_Retime_UI(QWidget):
 
     def setup_UI(self):
         main_layout = QVBoxLayout(self)
-
         button_layout = QHBoxLayout(self)
 
         # Buttons in range -100:100
@@ -23,33 +22,38 @@ class Animation_Retime_UI(QWidget):
         self.pos_50_btn = QPushButton("50")
         self.pos_100_btn = QPushButton("100")
 
-        # Create a vertical line
-        vertical_line = QFrame()
-        vertical_line.setFrameShape(QFrame.VLine)
-
-        # Set the thickness of the line
-        vertical_line.setStyleSheet("QFrame { background-color: #262626; width: 5px; }")
-        
-        negative_buttons = [self.neg_100_btn, self.neg_50_btn, self.neg_10_btn, self.neg_1_btn]
-        positive_buttons = [self.pos_1_btn, self.pos_10_btn, self.pos_50_btn, self.pos_100_btn]
-
-        # Add buttons and line to layout
-        for btn in negative_buttons:
-            button_layout.addWidget(btn)
-
-        button_layout.addWidget(vertical_line)
-
-        for btn in positive_buttons:
-            button_layout.addWidget(btn)
-
-        button_layout.addSpacerItem(QSpacerItem(15, 0))
-
-        # Create horizontal slider with max 100 min -100
+         # Create horizontal slider with max 100 min -100
         self.slider = QSlider()
         self.slider.setOrientation(Qt.Horizontal)
         self.slider.setMinimum(-100)
         self.slider.setMaximum(100)
         self.slider.setValue(0)
 
+        # Create a slier label with a grey background and white text
+        slider_label = QLabel("0")
+        slider_label.setStyleSheet("""
+                                   background-color: #262626; 
+                                   color: white;
+                                   padding: 8px;
+                                   padding-left: 15px;
+                                   padding-right: 15px;
+                                   """)
+        slider_label.setAlignment(Qt.AlignCenter) # Center align text
+        
+        negative_buttons = [self.neg_100_btn, self.neg_50_btn, self.neg_10_btn, self.neg_1_btn]
+        positive_buttons = [self.pos_1_btn, self.pos_10_btn, self.pos_50_btn, self.pos_100_btn]
+
+        # Add negative buttons to layout
+        for btn in negative_buttons:
+            button_layout.addWidget(btn)
+
+        # Add the slider label
+        button_layout.addWidget(slider_label)
+
+        # Add positive buttons to layout
+        for btn in positive_buttons:
+            button_layout.addWidget(btn)
+
+        # Add button_layout and slider to main_layout
         main_layout.addLayout(button_layout)
         main_layout.addWidget(self.slider)
