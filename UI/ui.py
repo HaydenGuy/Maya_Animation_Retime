@@ -30,15 +30,14 @@ class Animation_Retime_UI(QWidget):
         self.slider.setValue(0)
 
         # Create a slier label with a grey background and white text
-        slider_label = QLabel("0")
-        slider_label.setStyleSheet("""
+        self.slider_label = QLabel("0")
+        self.slider_label.setStyleSheet("""
                                    background-color: #262626; 
                                    color: white;
                                    padding: 8px;
-                                   padding-left: 15px;
-                                   padding-right: 15px;
                                    """)
-        slider_label.setAlignment(Qt.AlignCenter) # Center align text
+        self.slider_label.setFixedWidth(50) # Sets width of label to fixed value
+        self.slider_label.setAlignment(Qt.AlignCenter) # Center align text
         
         negative_buttons = [self.neg_100_btn, self.neg_50_btn, self.neg_10_btn, self.neg_1_btn]
         positive_buttons = [self.pos_1_btn, self.pos_10_btn, self.pos_50_btn, self.pos_100_btn]
@@ -48,7 +47,7 @@ class Animation_Retime_UI(QWidget):
             button_layout.addWidget(btn)
 
         # Add the slider label
-        button_layout.addWidget(slider_label)
+        button_layout.addWidget(self.slider_label)
 
         # Add positive buttons to layout
         for btn in positive_buttons:
