@@ -15,7 +15,6 @@ class Animation_Retime(QMainWindow):
         self.UI.neg_50_btn.clicked.connect(self.button_pressed)
         self.UI.neg_10_btn.clicked.connect(self.button_pressed)
         self.UI.neg_1_btn.clicked.connect(self.button_pressed)
-        self.UI.zero_0_btn.clicked.connect(self.button_pressed)
         self.UI.pos_1_btn.clicked.connect(self.button_pressed)
         self.UI.pos_10_btn.clicked.connect(self.button_pressed)
         self.UI.pos_50_btn.clicked.connect(self.button_pressed)
