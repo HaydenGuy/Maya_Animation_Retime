@@ -5,6 +5,9 @@ class Animation_Retime_UI(QWidget):
     def __init__(self):
         super().__init__()
 
+        # Set window minimum size
+        self.setMinimumSize(460, 100)
+
         self.setup_UI()
 
     def setup_UI(self):
@@ -16,25 +19,24 @@ class Animation_Retime_UI(QWidget):
         self.neg_50_btn = QPushButton("-50")
         self.neg_10_btn = QPushButton("-10")
         self.neg_1_btn = QPushButton("-1")
+        self.pos_1_btn = QPushButton("+1")
+        self.pos_10_btn = QPushButton("+10")
+        self.pos_50_btn = QPushButton("+50")
+        self.pos_100_btn = QPushButton("+100")
 
-        self.pos_1_btn = QPushButton("1")
-        self.pos_10_btn = QPushButton("10")
-        self.pos_50_btn = QPushButton("50")
-        self.pos_100_btn = QPushButton("100")
-
-         # Create horizontal slider with max 100 min -100
+        # Create horizontal slider with max 100 min -100
         self.slider = QSlider()
         self.slider.setOrientation(Qt.Horizontal)
         self.slider.setMinimum(-100)
         self.slider.setMaximum(100)
         self.slider.setValue(0)
 
-        # Create a slier label with a grey background and white text
+        # Create a slider label with a grey background and white text
         self.slider_label = QLabel("0")
         self.slider_label.setStyleSheet("""
-                                   background-color: #262626; 
-                                   color: white;
-                                   padding: 8px;
+                                        background-color: #262626; 
+                                        color: white;
+                                        padding: 8px;                                        
                                    """)
         self.slider_label.setFixedWidth(50) # Sets width of label to fixed value
         self.slider_label.setAlignment(Qt.AlignCenter) # Center align text
