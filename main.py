@@ -25,12 +25,23 @@ class Animation_Retime(QMainWindow):
         self.UI.slider.valueChanged.connect(self.slider_change)
 
     def button_pressed(self):
-        button = self.sender() # Gets the button clicked
-        button_value = int(button.text()) # Value of button is text converted to int
-        current_frame = int(cmds.currentTime(query=True)) # Gets the current time
-        new_frame = current_frame + button_value # Adds clicked button value to current frame
-        cmds.keyframe(time=(current_frame,), timeChange=new_frame) # Updates the current frame to the new frame
-        cmds.currentTime(new_frame) # Set time to updated frame
+        # Checks which button was clicked
+        button = self.sender() 
+
+        # Value of buttons text converted to int
+        button_value = int(button.text()) 
+        
+        # Query the current frame number from Maya
+        current_frame = int(cmds.currentTime(query=True))
+
+        # Adds clicked button value to current frame
+        new_frame = current_frame + button_value 
+
+        # Increase the value of selected keyframe by new_frame
+        cmds.keyframe(time=(current_frame,), timeChange=new_frame) 
+        
+        # Sets the current time in Maya to the new frame
+        cmds.currentTime(new_frame) 
 
     def slider_change(self, value):
         # Need to add a check to reset the slider when a new object is selected
@@ -55,6 +66,9 @@ class Animation_Retime(QMainWindow):
             new_frame = current_frame + time_change
         else:
             new_frame = current_frame
+
+        # Increase the value of selected keyframe by new_frame
+        cmds.keyframe(time=(current_frame,), timeChange=new_frame)
 
         # Sets the current time in Maya to the new frame
         cmds.currentTime(new_frame)
