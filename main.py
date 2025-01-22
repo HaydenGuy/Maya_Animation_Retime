@@ -1,5 +1,6 @@
 import sys
 from maya import cmds
+import maya.api.OpenMaya as om
 
 from PySide6.QtWidgets import QMainWindow, QApplication
 import Animation_Retime.UI.ui as ui
@@ -10,6 +11,9 @@ class Animation_Retime(QMainWindow):
 
         self.UI = ui.Animation_Retime_UI()
         self.setCentralWidget(self.UI)
+
+        # Register callback to listen for the SelectionChanged event and trigger selection_changed when it occurs
+        self.callback_id = om.MEventMessage.addEventCallback("SelectionChanged", self.selection_changed)
 
         self.UI.neg_100_btn.clicked.connect(self.button_pressed)
         self.UI.neg_50_btn.clicked.connect(self.button_pressed)
@@ -23,6 +27,19 @@ class Animation_Retime(QMainWindow):
         self.prev_slider_val = 0
 
         self.UI.slider.valueChanged.connect(self.slider_change)
+
+    """
+        Whenever a selection is changed in Maya reset the slider and its label to 0
+        *args is necessary to allow the method to take additional arguments
+    """
+    def selection_changed(self, *args):
+        self.UI.slider.setValue(0)
+        self.UI.slider_label.setText("0")
+
+    # Removes the callback to stop listening for SelectionChanged
+    def remove_callback(self):
+        if self.callback_id:
+            om.MMessage.removeCallback(self.callback_id)
 
     def button_pressed(self):
         # Checks which button was clicked
@@ -44,8 +61,6 @@ class Animation_Retime(QMainWindow):
         cmds.currentTime(new_frame) 
 
     def slider_change(self, value):
-        # Need to add a check to reset the slider when a new object is selected
-
         # Set the slider label text to slider value
         self.UI.slider_label.setText(f"{value}")
 
