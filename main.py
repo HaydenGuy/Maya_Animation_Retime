@@ -33,20 +33,33 @@ class Animation_Retime(QMainWindow):
         cmds.currentTime(new_frame) # Set time to updated frame
 
     def slider_change(self, value):
+        # Need to add a check to reset the slider when a new object is selected
+
+        # Set the slider label text to slider value
         self.UI.slider_label.setText(f"{value}")
+
+        # Query current frame number from Maya
         current_frame = int(cmds.currentTime(query=True))
         
-        # Not working as intended - Slider can be moved need to add logic to decrease by x steps if slider value is clicked
-        # Need to add a check to reset the slider when a new object is selected
-        if value > self.prev_slider_val:
-            time_change = 1
-        elif value < self.prev_slider_val:
-            time_change = -1
-        else:
-            time_change = 0
+        # Get the number of steps between two points on the slider
+        time_change = abs(self.prev_slider_val - value)
 
-        new_frame = current_frame + time_change
+        """
+            Decrease current frame time if prev slider value is less than new value
+            Increase current frame time if prev slider value is greater than new value
+            If they are the same there is no increase so new frame must be current frame
+        """
+        if self.prev_slider_val > value:
+            new_frame = current_frame - time_change
+        elif self.prev_slider_val < value:
+            new_frame = current_frame + time_change
+        else:
+            new_frame = current_frame
+
+        # Sets the current time in Maya to the new frame
         cmds.currentTime(new_frame)
+
+        # Update the old slider value
         self.prev_slider_val = value
 
 if __name__ == '__main__':
