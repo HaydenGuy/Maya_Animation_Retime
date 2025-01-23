@@ -1,6 +1,6 @@
 import sys
 
-from PySide6.QtWidgets import QWidget, QVBoxLayout
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QApplication
 import shiboken6
 
 from maya import cmds
