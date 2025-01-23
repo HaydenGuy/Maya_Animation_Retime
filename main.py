@@ -45,6 +45,9 @@ class Animation_Retime(MayaQWidgetDockableMixin, QWidget):
 
         self.UI.slider.valueChanged.connect(self.slider_change)
 
+        # Connect the button to resize_window
+        self.resize_window()
+
     """
         Whenever a selection is changed in Maya reset the slider and its label to 0
         *args is necessary to allow the method to take additional arguments
@@ -107,6 +110,10 @@ class Animation_Retime(MayaQWidgetDockableMixin, QWidget):
 
         # Update the old slider value
         self.prev_slider_val = value
+
+    def resize_window(self):
+        if self.UI.toggle_state == "vertical":
+            self.resize(100, 100)
 
 if __name__ == '__main__':
     # Create a Qt application instance or use the existing one
