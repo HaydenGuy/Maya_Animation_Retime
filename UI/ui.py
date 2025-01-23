@@ -5,9 +5,6 @@ class Animation_Retime_UI(QWidget):
     def __init__(self):
         super().__init__()
 
-        # Set window minimum size
-        # self.setMinimumSize(460, 100)
-
         self.setup_UI()
 
     def setup_UI(self):
