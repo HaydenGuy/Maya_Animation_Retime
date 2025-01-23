@@ -9,7 +9,6 @@ class Animation_Retime_UI(QWidget):
 
         # Button used to toggle between vertical/horizontal layouts
         self.layout_toggle_btn = QPushButton("")
-        self.layout_toggle_btn.setFixedHeight(2)
         self.layout_toggle_btn.setStyleSheet("background-color: white;")
         self.toggle_state = "horizontal"
 
@@ -92,11 +91,17 @@ class Animation_Retime_UI(QWidget):
         # Add positive buttons to layout
         for btn in self.positive_buttons:
             button_layout.addWidget(btn)
-        
-        # Add button_layout and slider to main_layout
-        self.main_layout.addLayout(button_layout)
-        self.main_layout.addWidget(self.slider)
-        self.main_layout.addWidget(self.layout_toggle_btn)
+
+        self.slider.setOrientation(Qt.Horizontal)
+
+        # Add button_layout and slider to hoz_layout
+        hoz_layout = QVBoxLayout()
+        hoz_layout.addLayout(button_layout)
+        hoz_layout.addWidget(self.slider)
+        hoz_layout.addWidget(self.layout_toggle_btn)
+
+        # Add hoz_layout to main_layout
+        self.main_layout.addLayout(hoz_layout)
 
         self.toggle_state = "horizontal"
 
@@ -112,8 +117,15 @@ class Animation_Retime_UI(QWidget):
         for btn in self.negative_buttons:
             button_layout.addWidget(btn)
 
-        self.main_layout.addLayout(button_layout)
-        self.main_layout.addWidget(self.slider)
-        self.main_layout.addWidget(self.layout_toggle_btn)
+        self.slider.setOrientation(Qt.Vertical)
+
+        # Add button_layout and slider to hoz_layout
+        hoz_layout = QHBoxLayout()
+        hoz_layout.addWidget(self.layout_toggle_btn)
+        hoz_layout.addLayout(button_layout)
+        hoz_layout.addWidget(self.slider)
+
+        # Add hoz_layout to main_layout
+        self.main_layout.addLayout(hoz_layout)
 
         self.toggle_state = "vertical"
