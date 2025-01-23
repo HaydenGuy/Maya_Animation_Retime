@@ -43,34 +43,42 @@ class Animation_Retime_UI(QWidget):
         self.slider_label.setFixedWidth(50) # Sets width of label to fixed value
         self.slider_label.setAlignment(Qt.AlignCenter) # Center align text
 
+        # Setups a horizontal layout
         self.setup_hoz_layout()
 
+        # Calls toggle_layout when toggle button is clicked
         self.layout_toggle_btn.clicked.connect(self.toggle_layout)
 
+    # Toggles between the horizontal and vertical layouts
     def toggle_layout(self):
-        self.clear_layout(self.main_layout)
 
+        # Clears the current self.main_layout
+        self.clear_layout()
+
+        # Call respective setup method based on toggle_state
         if self.toggle_state == "vertical":
             self.setup_hoz_layout()
+            self.toggle_state = "horizontal"
         else:
             self.setup_vert_layout()
+            self.toggle_state = "vertical"
 
-    # Removes items and layouts within a layout
-    def clear_layout(self, layout):
-        # Get number of things within the layout
-        while layout.count():
-            # Remove first item
-            item = layout.takeAt(0)
+    # Remove all items from the main layout but keep the widgets intact
+    def clear_layout(self):
+        # Gets number of items in layout
+        while self.main_layout.count():
 
-            # If item is a layout, recursively clear it
-            if item.layout():
-                sub_layout = item.layout()
-                self.clear_layout(sub_layout)
+            # Removes item at index 0 which is always the first item
+            item = self.main_layout.takeAt(0)
+            
+            # Checks if the item is a widget
+            widget = item.widget() 
+            
+            # If item is a widget, detach the widget from the layout without deleting it
+            if widget:
+                widget.setParent(None)
 
-            # If item is a widget, schedule to delete
-            if item.widget():
-                item.widget().deleteLater()
-
+    # Sets up a horizontal layout
     def setup_hoz_layout(self):
         button_layout = QHBoxLayout(self)
             
@@ -92,6 +100,7 @@ class Animation_Retime_UI(QWidget):
 
         self.toggle_state = "horizontal"
 
+    # Sets up a vertical layout
     def setup_vert_layout(self):
         button_layout = QVBoxLayout(self)
 
