@@ -5,9 +5,6 @@ class Animation_Retime_UI(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.setup_UI()
-
-    def setup_UI(self):
         main_layout = QVBoxLayout(self)
         button_layout = QHBoxLayout(self)
 
