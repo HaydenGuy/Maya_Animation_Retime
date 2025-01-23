@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QSlider, QLabel
+from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QSlider, QLabel, QSizePolicy
 from PySide6.QtGui import Qt
 
 class Animation_Retime_UI(QWidget):
@@ -9,7 +9,6 @@ class Animation_Retime_UI(QWidget):
 
         # Button used to toggle between vertical/horizontal layouts
         self.layout_toggle_btn = QPushButton("")
-        self.layout_toggle_btn.setStyleSheet("background-color: white;")
         self.toggle_state = "horizontal"
 
         # Buttons in range -100:100
@@ -92,7 +91,20 @@ class Animation_Retime_UI(QWidget):
         for btn in self.positive_buttons:
             button_layout.addWidget(btn)
 
+        # Set slider orientation to horizontal
         self.slider.setOrientation(Qt.Horizontal)
+
+        # Set the layout for the toggle button to expand horizontally
+        self.layout_toggle_btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        
+        # Set the styling for toggle button
+        self.layout_toggle_btn.setStyleSheet("""
+                                                background-color: #ababab;
+                                                border-radius: 1px;
+                                                padding: 1px;
+                                                width: 1px;
+                                                height: 2px;
+                                             """)
 
         # Add button_layout and slider to hoz_layout
         hoz_layout = QVBoxLayout()
@@ -103,29 +115,47 @@ class Animation_Retime_UI(QWidget):
         # Add hoz_layout to main_layout
         self.main_layout.addLayout(hoz_layout)
 
+        # Change the toggle state
         self.toggle_state = "horizontal"
 
     # Sets up a vertical layout
     def setup_vert_layout(self):
         button_layout = QVBoxLayout(self)
 
+        # Add positive buttons to layout
         for btn in self.positive_buttons:
             button_layout.addWidget(btn)
 
+        # Add slider label to layout
         button_layout.addWidget(self.slider_label)
 
+        # Add negative buttons to layout
         for btn in self.negative_buttons:
             button_layout.addWidget(btn)
 
+        # Set slider orientation to vertical
         self.slider.setOrientation(Qt.Vertical)
 
+        # Set the layout for the toggle button to expand vertically
+        self.layout_toggle_btn.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Expanding)
+        
+        # Set the styling for toggle button
+        self.layout_toggle_btn.setStyleSheet("""
+                                                background-color: #ababab;
+                                                border-radius: 1px;
+                                                padding: 1px;
+                                                width: 2px;
+                                                height: 1px;
+                                             """)
+
         # Add button_layout and slider to hoz_layout
-        hoz_layout = QHBoxLayout()
-        hoz_layout.addWidget(self.layout_toggle_btn)
-        hoz_layout.addLayout(button_layout)
-        hoz_layout.addWidget(self.slider)
+        vert_layout = QHBoxLayout()
+        vert_layout.addWidget(self.layout_toggle_btn)
+        vert_layout.addLayout(button_layout)
+        vert_layout.addWidget(self.slider)
 
         # Add hoz_layout to main_layout
-        self.main_layout.addLayout(hoz_layout)
+        self.main_layout.addLayout(vert_layout)
 
+        # Change the toggle state
         self.toggle_state = "vertical"
