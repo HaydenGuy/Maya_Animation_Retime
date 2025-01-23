@@ -47,17 +47,29 @@ class Animation_Retime_UI(QWidget):
 
         self.layout_toggle_btn.clicked.connect(self.toggle_layout)
 
-        
     def toggle_layout(self):
-        del self.main_layout
-        # self.main_layout = QVBoxLayout()
+        self.clear_layout(self.main_layout)
 
         if self.toggle_state == "vertical":
-            print("hoz")
-            # self.setup_hoz_layout()
+            self.setup_hoz_layout()
         else:
-            print("vert")
-            # self.setup_vert_layout()            
+            self.setup_vert_layout()
+
+    # Removes items and layouts within a layout
+    def clear_layout(self, layout):
+        # Get number of things within the layout
+        while layout.count():
+            # Remove first item
+            item = layout.takeAt(0)
+
+            # If item is a layout, recursively clear it
+            if item.layout():
+                sub_layout = item.layout()
+                self.clear_layout(sub_layout)
+
+            # If item is a widget, schedule to delete
+            if item.widget():
+                item.widget().deleteLater()
 
     def setup_hoz_layout(self):
         button_layout = QHBoxLayout(self)
