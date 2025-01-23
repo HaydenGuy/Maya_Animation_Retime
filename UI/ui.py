@@ -5,8 +5,7 @@ class Animation_Retime_UI(QWidget):
     def __init__(self):
         super().__init__()
 
-        main_layout = QVBoxLayout(self)
-        button_layout = QHBoxLayout(self)
+        self.main_layout = QVBoxLayout(self)
 
         # Button used to toggle between vertical/horizontal layouts
         self.layout_toggle_btn = QPushButton("")
@@ -24,6 +23,9 @@ class Animation_Retime_UI(QWidget):
         self.pos_50_btn = QPushButton("+50")
         self.pos_100_btn = QPushButton("+100")
 
+        self.negative_buttons = [self.neg_100_btn, self.neg_50_btn, self.neg_10_btn, self.neg_1_btn]
+        self.positive_buttons = [self.pos_1_btn, self.pos_10_btn, self.pos_50_btn, self.pos_100_btn]
+
         # Create horizontal slider with range -100 to 100
         self.slider = QSlider()
         self.slider.setRange(-100, 100)
@@ -40,22 +42,57 @@ class Animation_Retime_UI(QWidget):
                                    """)
         self.slider_label.setFixedWidth(50) # Sets width of label to fixed value
         self.slider_label.setAlignment(Qt.AlignCenter) # Center align text
+
+        self.setup_hoz_layout()
+
+        self.layout_toggle_btn.clicked.connect(self.toggle_layout)
+
         
-        negative_buttons = [self.neg_100_btn, self.neg_50_btn, self.neg_10_btn, self.neg_1_btn]
-        positive_buttons = [self.pos_1_btn, self.pos_10_btn, self.pos_50_btn, self.pos_100_btn]
+    def toggle_layout(self):
+        del self.main_layout
+        # self.main_layout = QVBoxLayout()
 
+        if self.toggle_state == "vertical":
+            print("hoz")
+            # self.setup_hoz_layout()
+        else:
+            print("vert")
+            # self.setup_vert_layout()            
+
+    def setup_hoz_layout(self):
+        button_layout = QHBoxLayout(self)
+            
         # Add negative buttons to layout
-        for btn in negative_buttons:
+        for btn in self.negative_buttons:
             button_layout.addWidget(btn)
-
+        
         # Add the slider label
         button_layout.addWidget(self.slider_label)
-
+        
         # Add positive buttons to layout
-        for btn in positive_buttons:
+        for btn in self.positive_buttons:
+            button_layout.addWidget(btn)
+        
+        # Add button_layout and slider to main_layout
+        self.main_layout.addLayout(button_layout)
+        self.main_layout.addWidget(self.slider)
+        self.main_layout.addWidget(self.layout_toggle_btn)
+
+        self.toggle_state = "horizontal"
+
+    def setup_vert_layout(self):
+        button_layout = QVBoxLayout(self)
+
+        for btn in self.positive_buttons:
             button_layout.addWidget(btn)
 
-        # Add button_layout and slider to main_layout
-        main_layout.addLayout(button_layout)
-        main_layout.addWidget(self.slider)
-        main_layout.addWidget(self.layout_toggle_btn)
+        button_layout.addWidget(self.slider_label)
+
+        for btn in self.negative_buttons:
+            button_layout.addWidget(btn)
+
+        self.main_layout.addLayout(button_layout)
+        self.main_layout.addWidget(self.slider)
+        self.main_layout.addWidget(self.layout_toggle_btn)
+
+        self.toggle_state = "vertical"
