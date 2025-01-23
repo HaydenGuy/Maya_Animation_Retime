@@ -1,16 +1,33 @@
 import sys
+
+from PySide6.QtWidgets import QWidget, QVBoxLayout
+import shiboken6
+
 from maya import cmds
 import maya.api.OpenMaya as om
+import maya.OpenMayaUI as omui
+from maya.app.general.mayaMixin import MayaQWidgetDockableMixin
 
-from PySide6.QtWidgets import QMainWindow, QApplication
 import Animation_Retime.UI.ui as ui
 
-class Animation_Retime(QMainWindow):
-    def __init__(self):
-        super().__init__()
+# Convert a Maya window into a QWidget object for interaction
+def maya_dockable_window():
+    main_window_pointer = omui.MQtUtil.mainWindow()
+    return shiboken6.wrapInstance(int(main_window_pointer), QWidget)
 
+# Creates a dockable window in Maya for retiming animated keyframes
+class Animation_Retime(MayaQWidgetDockableMixin, QWidget):
+    def __init__(self, parent=maya_dockable_window()):
+        # Initializes the parent class and sets Maya main window as the parent
+        super().__init__(parent)
+
+        # Create instance of UI from UI file
         self.UI = ui.Animation_Retime_UI()
-        self.setCentralWidget(self.UI)
+
+        # Set layout, window title, and add UI to layout
+        self.setLayout(QVBoxLayout())
+        self.layout().addWidget(self.UI)
+        self.setWindowTitle("Animation Retime")
 
         # Register callback to listen for the SelectionChanged event and trigger selection_changed when it occurs
         self.callback_id = om.MEventMessage.addEventCallback("SelectionChanged", self.selection_changed)
@@ -99,4 +116,4 @@ if __name__ == '__main__':
     
     # Create and show the UI window
     window = Animation_Retime()    
-    window.show()
+    window.show(dockable=True)
