@@ -8,6 +8,12 @@ class Animation_Retime_UI(QWidget):
         main_layout = QVBoxLayout(self)
         button_layout = QHBoxLayout(self)
 
+        # Button used to toggle between vertical/horizontal layouts
+        self.layout_toggle_btn = QPushButton("")
+        self.layout_toggle_btn.setFixedHeight(2)
+        self.layout_toggle_btn.setStyleSheet("background-color: white;")
+        self.toggle_state = "horizontal"
+
         # Buttons in range -100:100
         self.neg_100_btn = QPushButton("-100")
         self.neg_50_btn = QPushButton("-50")
@@ -52,3 +58,4 @@ class Animation_Retime_UI(QWidget):
         # Add button_layout and slider to main_layout
         main_layout.addLayout(button_layout)
         main_layout.addWidget(self.slider)
+        main_layout.addWidget(self.layout_toggle_btn)
