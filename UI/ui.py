@@ -2,14 +2,14 @@ from PySide6.QtWidgets import QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QS
 from PySide6.QtGui import Qt
 
 class Animation_Retime_UI(QWidget):
-    def __init__(self):
+    def __init__(self, toggle_state):
         super().__init__()
 
         self.main_layout = QVBoxLayout(self)
 
         # Button used to toggle between vertical/horizontal layouts
-        self.layout_toggle_btn = QPushButton("")
-        self.toggle_state = "horizontal"
+        self.hoz_layout_btn = QPushButton("")
+        self.vert_layout_btn = QPushButton("")
 
         # Buttons in range -100:100
         self.neg_100_btn = QPushButton("-100")
@@ -41,27 +41,24 @@ class Animation_Retime_UI(QWidget):
         self.slider_label.setFixedWidth(50) # Sets width of label to fixed value
         self.slider_label.setAlignment(Qt.AlignCenter) # Center align text
 
-        # Setups a horizontal layout
-        self.setup_hoz_layout()
+        # Toggle state determines which layout is created
+        self.toggle_layout(toggle_state)
 
-        # Calls toggle_layout when toggle button is clicked
-        self.layout_toggle_btn.clicked.connect(self.toggle_layout)
+        # Calls layout setup when button is clicked
+        self.hoz_layout_btn.clicked.connect(self.setup_vert_layout)
+
+        self.vert_layout_btn.clicked.connect(self.setup_hoz_layout)
 
     # Toggles between the horizontal and vertical layouts
-    def toggle_layout(self):
-
+    def toggle_layout(self, toggle_state):
         # Clears the current self.main_layout
         self.clear_layout()
 
         # Call respective setup method based on toggle_state
-        if self.toggle_state == "vertical":
+        if toggle_state == "horizontal":
             self.setup_hoz_layout()
-            self.toggle_state = "horizontal"
-            self.setFixedSize(500, 140) # Change layout size to fit widgets
         else:
             self.setup_vert_layout()
-            self.toggle_state = "vertical"
-            self.setFixedSize(110, 380) # Change layout size to fit widgets
 
     # Remove all items from the main layout but keep the widgets intact
     def clear_layout(self):
@@ -80,6 +77,9 @@ class Animation_Retime_UI(QWidget):
 
     # Sets up a horizontal layout
     def setup_hoz_layout(self):
+        # Clears the current self.main_layout
+        self.clear_layout()
+
         button_layout = QHBoxLayout(self)
             
         # Add negative buttons to layout
@@ -97,10 +97,10 @@ class Animation_Retime_UI(QWidget):
         self.slider.setOrientation(Qt.Horizontal)
 
         # Set the layout for the toggle button to expand horizontally
-        self.layout_toggle_btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
+        self.hoz_layout_btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
         
         # Set the styling for toggle button
-        self.layout_toggle_btn.setStyleSheet("""
+        self.hoz_layout_btn.setStyleSheet("""
                                                 background-color: #ababab;
                                                 border-radius: 1px;
                                                 padding: 1px;
@@ -112,16 +112,16 @@ class Animation_Retime_UI(QWidget):
         hoz_layout = QVBoxLayout()
         hoz_layout.addLayout(button_layout)
         hoz_layout.addWidget(self.slider)
-        hoz_layout.addWidget(self.layout_toggle_btn)
+        hoz_layout.addWidget(self.hoz_layout_btn)
 
         # Add hoz_layout to main_layout
         self.main_layout.addLayout(hoz_layout)
 
-        # Change the toggle state
-        self.toggle_state = "horizontal"
-
     # Sets up a vertical layout
     def setup_vert_layout(self):
+        # Clears the current self.main_layout
+        self.clear_layout()
+
         button_layout = QVBoxLayout(self)
 
         # Add positive buttons to layout
@@ -139,10 +139,10 @@ class Animation_Retime_UI(QWidget):
         self.slider.setOrientation(Qt.Vertical)
 
         # Set the layout for the toggle button to expand vertically
-        self.layout_toggle_btn.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Expanding)
+        self.vert_layout_btn.setSizePolicy(QSizePolicy.Fixed, QSizePolicy.Expanding)
         
         # Set the styling for toggle button
-        self.layout_toggle_btn.setStyleSheet("""
+        self.vert_layout_btn.setStyleSheet("""
                                                 background-color: #ababab;
                                                 border-radius: 1px;
                                                 padding: 1px;
@@ -152,12 +152,9 @@ class Animation_Retime_UI(QWidget):
 
         # Add button_layout and slider to hoz_layout
         vert_layout = QHBoxLayout()
-        vert_layout.addWidget(self.layout_toggle_btn)
+        vert_layout.addWidget(self.vert_layout_btn)
         vert_layout.addLayout(button_layout)
         vert_layout.addWidget(self.slider)
 
         # Add hoz_layout to main_layout
         self.main_layout.addLayout(vert_layout)
-
-        # Change the toggle state
-        self.toggle_state = "vertical"
