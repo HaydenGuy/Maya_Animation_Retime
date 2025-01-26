@@ -57,9 +57,11 @@ class Animation_Retime_UI(QWidget):
         if self.toggle_state == "vertical":
             self.setup_hoz_layout()
             self.toggle_state = "horizontal"
+            self.setFixedSize(500, 140) # Change layout size to fit widgets
         else:
             self.setup_vert_layout()
             self.toggle_state = "vertical"
+            self.setFixedSize(110, 380) # Change layout size to fit widgets
 
     # Remove all items from the main layout but keep the widgets intact
     def clear_layout(self):
