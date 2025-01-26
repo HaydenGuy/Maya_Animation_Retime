@@ -17,12 +17,16 @@ def maya_dockable_window():
 
 # Creates a dockable window in Maya for retiming animated keyframes
 class Animation_Retime(MayaQWidgetDockableMixin, QWidget):
-    def __init__(self, parent=maya_dockable_window()):
+    def __init__(self, parent=maya_dockable_window(), toggle_state="horizontal", width=400, height=120):
         # Initializes the parent class and sets Maya main window as the parent
         super().__init__(parent)
 
-        # Create instance of UI from UI file
-        self.UI = ui.Animation_Retime_UI()
+        self.width = width
+        self.height = height
+        self.resize(self.width, self.height)
+
+        # Create instance of UI from UI file with the UI toggle state set
+        self.UI = ui.Animation_Retime_UI(toggle_state)
 
         # Set layout, window title, and add UI to layout
         self.setLayout(QVBoxLayout())
@@ -45,8 +49,9 @@ class Animation_Retime(MayaQWidgetDockableMixin, QWidget):
 
         self.UI.slider.valueChanged.connect(self.slider_change)
 
-        # Connect the button to resize_window
-        self.resize_window()
+        self.UI.hoz_layout_btn.clicked.connect(self.setup_vert_window)
+        self.UI.vert_layout_btn.clicked.connect(self.setup_hoz_window)
+        
 
     """
         Whenever a selection is changed in Maya reset the slider and its label to 0
@@ -111,9 +116,23 @@ class Animation_Retime(MayaQWidgetDockableMixin, QWidget):
         # Update the old slider value
         self.prev_slider_val = value
 
-    def resize_window(self):
-        if self.UI.toggle_state == "vertical":
-            self.resize(100, 100)
+    # Setups a vertical window by closing and recreating a new Animation_Retime window
+    def setup_vert_window(self):
+        self.close()
+
+        new_window = Animation_Retime(maya_dockable_window(), "vertical", 100, 200)
+        new_window.show(dockable=True)
+
+        self.app_window = new_window
+
+    # Setups a horizontal window by closing and recreating a new Animation_Retime window
+    def setup_hoz_window(self):
+        self.close()
+
+        new_window = Animation_Retime(maya_dockable_window(), "horizontal", 400, 120)
+        new_window.show(dockable=True)
+
+        self.app_window = new_window
 
 if __name__ == '__main__':
     # Create a Qt application instance or use the existing one
