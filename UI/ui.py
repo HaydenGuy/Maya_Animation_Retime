@@ -101,12 +101,17 @@ class Animation_Retime_UI(QWidget):
         
         # Set the styling for toggle button
         self.hoz_layout_btn.setStyleSheet("""
-                                                background-color: #ababab;
-                                                border-radius: 2px;
-                                                padding: 2px;
-                                                width: 2px;
-                                                height: 2px;
-                                             """)
+            QPushButton {
+                background-color: rgb(171, 171, 171);
+                border-radius: 2px;
+                padding: 2px;
+                width: 2px;
+                height: 2px;
+                }
+            QPushButton:hover {
+                background-color: rgb(221, 221, 221);
+            }
+        """)
 
         # Add button_layout and slider to hoz_layout
         hoz_layout = QVBoxLayout()
@@ -148,12 +153,17 @@ class Animation_Retime_UI(QWidget):
         
         # Set the styling for toggle button
         self.vert_layout_btn.setStyleSheet("""
-                                                background-color: #ababab;
-                                                border-radius: 2px;
-                                                padding: 2px;
-                                                width: 2px;
-                                                height: 2px;
-                                             """)
+            QPushButton {
+                background-color:rgb(171, 171, 171);
+                border-radius: 2px;
+                padding: 2px;
+                width: 2px;
+                height: 2px;
+                }
+            QPushButton:hover {
+                background-color:rgb(221, 221, 221);
+            }
+        """)
 
         # Add button_layout and slider to vert_layout
         vert_layout = QHBoxLayout()
