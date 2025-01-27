@@ -38,7 +38,7 @@ class Animation_Retime_UI(QWidget):
                                         color: white;
                                         padding: 8px;                                        
                                    """)
-        self.slider_label.setFixedWidth(50) # Sets width of label to fixed value
+        # self.slider_label.setFixedWidth(50) # Sets width of label to fixed value
         self.slider_label.setAlignment(Qt.AlignCenter) # Center align text
 
         # Toggle state determines which layout is created
@@ -124,15 +124,20 @@ class Animation_Retime_UI(QWidget):
 
         button_layout = QVBoxLayout(self)
 
-        # Add positive buttons to layout
+        # Add positive buttons to layout and set size policy
         for btn in self.positive_buttons:
+            btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
             button_layout.addWidget(btn)
 
+        # Set slider label size policy
+        self.slider_label.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
+        
         # Add slider label to layout
         button_layout.addWidget(self.slider_label)
 
-        # Add negative buttons to layout
+        # Add negative buttons to layout and set size policy
         for btn in self.negative_buttons:
+            btn.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Expanding)
             button_layout.addWidget(btn)
 
         # Set slider orientation to vertical
@@ -150,11 +155,11 @@ class Animation_Retime_UI(QWidget):
                                                 height: 1px;
                                              """)
 
-        # Add button_layout and slider to hoz_layout
+        # Add button_layout and slider to vert_layout
         vert_layout = QHBoxLayout()
         vert_layout.addWidget(self.vert_layout_btn)
         vert_layout.addLayout(button_layout)
         vert_layout.addWidget(self.slider)
 
-        # Add hoz_layout to main_layout
+        # Add vert_layout to main_layout
         self.main_layout.addLayout(vert_layout)
