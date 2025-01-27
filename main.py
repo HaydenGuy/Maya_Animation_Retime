@@ -123,16 +123,12 @@ class Animation_Retime(MayaQWidgetDockableMixin, QWidget):
         new_window = Animation_Retime(maya_dockable_window(), "vertical", 100, 200)
         new_window.show(dockable=True)
 
-        self.app_window = new_window
-
     # Setups a horizontal window by closing and recreating a new Animation_Retime window
     def setup_hoz_window(self):
         self.close()
 
         new_window = Animation_Retime(maya_dockable_window(), "horizontal", 400, 120)
         new_window.show(dockable=True)
-
-        self.app_window = new_window
 
 if __name__ == '__main__':
     # Create a Qt application instance or use the existing one
