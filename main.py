@@ -51,7 +51,6 @@ class Animation_Retime(MayaQWidgetDockableMixin, QWidget):
 
         self.UI.hoz_layout_btn.clicked.connect(self.setup_vert_window)
         self.UI.vert_layout_btn.clicked.connect(self.setup_hoz_window)
-        
 
     """
         Whenever a selection is changed in Maya reset the slider and its label to 0
