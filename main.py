@@ -129,12 +129,26 @@ class Animation_Retime(MayaQWidgetDockableMixin, QWidget):
         new_window = Animation_Retime(maya_dockable_window(), "horizontal", 400, 120)
         new_window.show(dockable=True)
 
+# Checks if a window with the same title is open
+def is_window_open(title):
+    # Iterate through all top-level widgets to find a matching title
+    for widget in QApplication.topLevelWidgets():
+        if widget.windowTitle() == title and widget.isVisible():
+            return widget
+    return None
+
 if __name__ == '__main__':
     # Create a Qt application instance or use the existing one
     app = QApplication.instance()
     if not app:
         app = QApplication(sys.argv)
     
-    # Create and show the UI window
-    window = Animation_Retime()    
-    window.show(dockable=True)
+    # Checks if a window is already open and brings it to the front if it is
+    widget = is_window_open("Animation Retime")
+    if widget:
+        widget.raise_()
+        widget.activateWindow()
+    else:
+        # Create and show the UI window
+        window = Animation_Retime()    
+        window.show(dockable=True)
