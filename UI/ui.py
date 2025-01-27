@@ -102,9 +102,9 @@ class Animation_Retime_UI(QWidget):
         # Set the styling for toggle button
         self.hoz_layout_btn.setStyleSheet("""
                                                 background-color: #ababab;
-                                                border-radius: 1px;
-                                                padding: 1px;
-                                                width: 1px;
+                                                border-radius: 2px;
+                                                padding: 2px;
+                                                width: 2px;
                                                 height: 2px;
                                              """)
 
@@ -149,10 +149,10 @@ class Animation_Retime_UI(QWidget):
         # Set the styling for toggle button
         self.vert_layout_btn.setStyleSheet("""
                                                 background-color: #ababab;
-                                                border-radius: 1px;
-                                                padding: 1px;
+                                                border-radius: 2px;
+                                                padding: 2px;
                                                 width: 2px;
-                                                height: 1px;
+                                                height: 2px;
                                              """)
 
         # Add button_layout and slider to vert_layout
