@@ -30,6 +30,20 @@ class Animation_Retime_UI(QWidget):
         self.slider.setOrientation(Qt.Horizontal) # Slider orientation
         self.slider.setSingleStep(1) # Set the step size to 1 
         self.slider.setValue(0) # Starting value
+        
+        # Add styling to slider handle so it can change color on hover
+        self.slider.setStyleSheet("""
+             QSlider::handle{
+                background: rgb(171, 171, 171);
+                border: 1px solid rgb(65, 65, 65);
+                border-radius: 3px;
+            }
+            
+            QSlider::handle:hover {
+                background:rgb(221, 221, 221);
+                border: 1px solid rgb(65, 65, 65);
+            }
+        """)
 
         # Create a slider label with a grey background and white text
         self.slider_label = QLabel("0")
@@ -38,7 +52,9 @@ class Animation_Retime_UI(QWidget):
                                         color: white;
                                         padding: 8px;                                        
                                    """)
+
         # self.slider_label.setFixedWidth(50) # Sets width of label to fixed value
+
         self.slider_label.setAlignment(Qt.AlignCenter) # Center align text
 
         # Toggle state determines which layout is created
