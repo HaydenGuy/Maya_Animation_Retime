@@ -53,8 +53,6 @@ class Animation_Retime_UI(QWidget):
                                         padding: 8px;                                        
                                    """)
 
-        # self.slider_label.setFixedWidth(50) # Sets width of label to fixed value
-
         self.slider_label.setAlignment(Qt.AlignCenter) # Center align text
 
         # Toggle state determines which layout is created
