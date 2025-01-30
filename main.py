@@ -109,8 +109,8 @@ class Animation_Retime(MayaQWidgetDockableMixin, QWidget):
         # Update the old slider value
         self.prev_slider_val = value
 
-    # Returns a dictionary of the keyed attribute keyframes 
-    def check_keyed_frames_and_attributes(self):
+    # Returns a dictionary of the keyed attribute keyframes - NOT WORKING
+    def check_keyed_frames_and_attributes(self, new_frame):
         # Gets a list of the selected objects
         objects = cmds.ls(selection=True)
         
@@ -124,17 +124,12 @@ class Animation_Retime(MayaQWidgetDockableMixin, QWidget):
             # Get a list of the objects keyable attributes or return an empty list
             keyable_attrs = cmds.listAttr(selected_obj, keyable=True) or []
 
-            keyframes_dict = {}
-
-            # Check the attribute to determine which keyframes are keyed using that attribute
             for attr in keyable_attrs:
-                keyframes = cmds.keyframe(f"{selected_obj}.{attr}", query=True, timeChange=True)
+                new_key_exists = cmds.keyframe(f"{selected_obj}.{attr}", query=True, time=(new_frame, new_frame))
 
-                # Add the attribute: keyframes to the dictionary if they exist
-                if keyframes:
-                    keyframes_dict[attr] = keyframes
-
-            return keyframes_dict
+                if new_key_exists:
+                    cmds.cutKey(f"{selected_obj}.{attr}", time=(new_frame, new_frame))
+            
                 
     """
         Updates the keyframe and current time
@@ -152,10 +147,8 @@ class Animation_Retime(MayaQWidgetDockableMixin, QWidget):
                 cmds.currentTime(new_frame) 
         except TypeError: # When no object selected
             om.MGlobal.displayWarning("No object selected")
-        # except RuntimeError: # When trying to move a keyframe over another
-            # Get obj and attr - cmds.ls(selection=True)[0]
-            # cmds.cutKey(current_frame)
-            # cmds.setKey(new_frame)
+        except RuntimeError: # When trying to move a keyframe over another - BROKEN
+            self.check_keyed_frames_and_attributes(new_frame)
 
     # Setups a vertical window by closing and recreating a new Animation_Retime window
     def setup_vert_window(self):
