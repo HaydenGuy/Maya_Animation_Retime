@@ -125,7 +125,7 @@ class Animation_Retime(MayaQWidgetDockableMixin, QWidget):
                 cmds.currentTime(new_frame) 
         except TypeError: # When no object selected
             om.MGlobal.displayWarning("No object selected")
-        except RuntimeError: # When trying to move a keyframe over another
+        # except RuntimeError: # When trying to move a keyframe over another
             # Get obj and attr - cmds.ls(selection=True)[0]
             # cmds.cutKey(current_frame)
             # cmds.setKey(new_frame)
