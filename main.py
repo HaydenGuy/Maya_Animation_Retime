@@ -115,6 +115,16 @@ class Animation_Retime(MayaQWidgetDockableMixin, QWidget):
         # Update the old slider value
         self.prev_slider_val = value
 
+    def update_frame(self, current_frame, new_frame):
+        try:
+            # Increase the value of selected keyframe by new_frame
+            cmds.keyframe(time=(current_frame,), timeChange=new_frame) 
+
+            # Sets the current time in Maya to the new frame
+            cmds.currentTime(new_frame) 
+        except TypeError:
+            om.MGlobal.displayError("No frames selected")
+            
     # Setups a vertical window by closing and recreating a new Animation_Retime window
     def setup_vert_window(self):
         self.close()
