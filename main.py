@@ -123,8 +123,12 @@ class Animation_Retime(MayaQWidgetDockableMixin, QWidget):
 
                 # Sets the current time in Maya to the new frame
                 cmds.currentTime(new_frame) 
-        except TypeError:
+        except TypeError: # When no object selected
             om.MGlobal.displayWarning("No object selected")
+        except RuntimeError: # When trying to move a keyframe over another
+            # Get obj and attr - cmds.ls(selection=True)[0]
+            # cmds.cutKey(current_frame)
+            # cmds.setKey(new_frame)
 
     # Setups a vertical window by closing and recreating a new Animation_Retime window
     def setup_vert_window(self):
