@@ -109,6 +109,15 @@ class Animation_Retime(MayaQWidgetDockableMixin, QWidget):
         # Update the old slider value
         self.prev_slider_val = value
 
+    def check_keyed_frames_and_attributes(self):
+        objects = cmds.ls(selection=True)
+        if not objects:
+            om.MGlobal.displayError("No object selected. Please select and object.")
+        else:
+            selected_obj = objects[0]
+
+            keyable_attrs = cmds.listAttr(selected_obj, keyable=True) or []
+
     """
         Updates the keyframe and current time
         Raise error if no object selected or frames go negative
