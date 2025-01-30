@@ -78,11 +78,8 @@ class Animation_Retime(MayaQWidgetDockableMixin, QWidget):
         # Adds clicked button value to current frame
         new_frame = current_frame + button_value 
 
-        # Increase the value of selected keyframe by new_frame
-        cmds.keyframe(time=(current_frame,), timeChange=new_frame) 
-        
-        # Sets the current time in Maya to the new frame
-        cmds.currentTime(new_frame) 
+        # Call update_frame to update the keyframes and current time
+        self.update_frame(current_frame, new_frame)
 
     def slider_change(self, value):
         # Set the slider label text to slider value
@@ -106,15 +103,16 @@ class Animation_Retime(MayaQWidgetDockableMixin, QWidget):
         else:
             new_frame = current_frame
 
-        # Increase the value of selected keyframe by new_frame
-        cmds.keyframe(time=(current_frame,), timeChange=new_frame)
-
-        # Sets the current time in Maya to the new frame
-        cmds.currentTime(new_frame)
+        # Call update_frame to update the keyframes and current time
+        self.update_frame(current_frame, new_frame)
 
         # Update the old slider value
         self.prev_slider_val = value
 
+    """
+        Updates the keyframe and current time
+        Raise error if no object selected or frames go negative
+    """
     def update_frame(self, current_frame, new_frame):
         try:
             # Increase the value of selected keyframe by new_frame
@@ -123,8 +121,8 @@ class Animation_Retime(MayaQWidgetDockableMixin, QWidget):
             # Sets the current time in Maya to the new frame
             cmds.currentTime(new_frame) 
         except TypeError:
-            om.MGlobal.displayError("No frames selected")
-            
+            om.MGlobal.displayError("No object selected")
+
     # Setups a vertical window by closing and recreating a new Animation_Retime window
     def setup_vert_window(self):
         self.close()
