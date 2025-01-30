@@ -109,15 +109,33 @@ class Animation_Retime(MayaQWidgetDockableMixin, QWidget):
         # Update the old slider value
         self.prev_slider_val = value
 
+    # Returns a dictionary of the keyed attribute keyframes 
     def check_keyed_frames_and_attributes(self):
+        # Gets a list of the selected objects
         objects = cmds.ls(selection=True)
+        
+        # If no object selected display an error message in Maya
         if not objects:
             om.MGlobal.displayError("No object selected. Please select and object.")
         else:
+            # Get the first selected object
             selected_obj = objects[0]
 
+            # Get a list of the objects keyable attributes or return an empty list
             keyable_attrs = cmds.listAttr(selected_obj, keyable=True) or []
 
+            keyframes_dict = {}
+
+            # Check the attribute to determine which keyframes are keyed using that attribute
+            for attr in keyable_attrs:
+                keyframes = cmds.keyframe(f"{selected_obj}.{attr}", query=True, timeChange=True)
+
+                # Add the attribute: keyframes to the dictionary if they exist
+                if keyframes:
+                    keyframes_dict[attr] = keyframes
+
+            return keyframes_dict
+                
     """
         Updates the keyframe and current time
         Raise error if no object selected or frames go negative
