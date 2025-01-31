@@ -78,6 +78,8 @@ class Animation_Retime(MayaQWidgetDockableMixin, QWidget):
         # Adds clicked button value to current frame
         new_frame = current_frame + button_value 
 
+        self.overwrite_same_keyframe(current_frame, button_value, new_frame)
+
         # Call update_frame to update the keyframes and current time
         self.update_frame(current_frame, new_frame)
 
@@ -109,26 +111,19 @@ class Animation_Retime(MayaQWidgetDockableMixin, QWidget):
         # Update the old slider value
         self.prev_slider_val = value
 
-    # Returns a dictionary of the keyed attribute keyframes - NOT WORKING
-    def check_keyed_frames_and_attributes(self, new_frame):
-        # Gets a list of the selected objects
-        objects = cmds.ls(selection=True)
-        
-        # If no object selected display an error message in Maya
-        if not objects:
-            om.MGlobal.displayError("No object selected. Please select and object.")
+    
+    def overwrite_same_keyframe(self, current_frame, button_value, new_frame):
+        obj = cmds.ls(selection=True)[0]
+
+        if button_value < 0:
+            pos_neg = -1
         else:
-            # Get the first selected object
-            selected_obj = objects[0]
+            pos_neg = 1
 
-            # Get a list of the objects keyable attributes or return an empty list
-            keyable_attrs = cmds.listAttr(selected_obj, keyable=True) or []
+        keyframe_at_time = cmds.keyframe(obj, query=True, time=(current_frame + pos_neg, current_frame + button_value))
 
-            for attr in keyable_attrs:
-                new_key_exists = cmds.keyframe(f"{selected_obj}.{attr}", query=True, time=(new_frame, new_frame))
-
-                if new_key_exists:
-                    cmds.cutKey(f"{selected_obj}.{attr}", time=(new_frame, new_frame))
+        if keyframe_at_time:
+            cmds.cutKey(obj, time=(new_frame, new_frame))
             
                 
     """
@@ -147,8 +142,8 @@ class Animation_Retime(MayaQWidgetDockableMixin, QWidget):
                 cmds.currentTime(new_frame) 
         except TypeError: # When no object selected
             om.MGlobal.displayWarning("No object selected")
-        except RuntimeError: # When trying to move a keyframe over another - BROKEN
-            self.check_keyed_frames_and_attributes(new_frame)
+        # except RuntimeError: # When trying to move a keyframe over another - BROKEN
+            # self.check_keyed_frames_and_attributes(new_frame)
 
     # Setups a vertical window by closing and recreating a new Animation_Retime window
     def setup_vert_window(self):
