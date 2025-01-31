@@ -78,7 +78,7 @@ class Animation_Retime(MayaQWidgetDockableMixin, QWidget):
         # Adds clicked button value to current frame
         new_frame = current_frame + button_value 
 
-        self.overwrite_same_keyframe(current_frame, button_value, new_frame)
+        self.overwrite_same_keyframe_attribute(current_frame, button_value, new_frame)
 
         # Call update_frame to update the keyframes and current time
         self.update_frame(current_frame, new_frame)
@@ -112,18 +112,29 @@ class Animation_Retime(MayaQWidgetDockableMixin, QWidget):
         self.prev_slider_val = value
 
     
-    def overwrite_same_keyframe(self, current_frame, button_value, new_frame):
+    def overwrite_same_keyframe_attribute(self, current_frame, slider_button_value, new_frame):
         obj = cmds.ls(selection=True)[0]
 
-        if button_value < 0:
+        keyable_attrs = cmds.listAttr(obj, keyable=True) or []
+
+        curr_keyed_attrs = []
+
+        for attr in keyable_attrs:
+            curr_attrs = cmds.keyframe(f"{obj}.{attr}", query=True, time=(current_frame, current_frame))
+
+            if curr_attrs:
+                curr_keyed_attrs.append(attr)
+
+        if slider_button_value < 0:
             pos_neg = -1
         else:
             pos_neg = 1
 
-        keyframe_at_time = cmds.keyframe(obj, query=True, time=(current_frame + pos_neg, current_frame + button_value))
+        for attr in curr_keyed_attrs:
+            keyframe_at_time = cmds.keyframe(f"{obj}.{attr}", query=True, time=(current_frame + pos_neg, current_frame + slider_button_value))
 
-        if keyframe_at_time:
-            cmds.cutKey(obj, time=(new_frame, new_frame))
+            if keyframe_at_time:
+                cmds.cutKey(obj, attribute=attr, time=(new_frame, new_frame))
             
                 
     """
