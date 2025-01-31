@@ -78,6 +78,7 @@ class Animation_Retime(MayaQWidgetDockableMixin, QWidget):
         # Adds clicked button value to current frame
         new_frame = current_frame + button_value 
 
+        # Overwrite attributes that share a keyframe
         self.overwrite_same_keyframe_attribute(current_frame, button_value, new_frame)
 
         # Call update_frame to update the keyframes and current time
@@ -105,35 +106,49 @@ class Animation_Retime(MayaQWidgetDockableMixin, QWidget):
         else:
             new_frame = current_frame
 
+        # Overwrite attributes that share a keyframe
+        self.overwrite_same_keyframe_attribute(current_frame, value, new_frame)
+
         # Call update_frame to update the keyframes and current time
         self.update_frame(current_frame, new_frame)
 
         # Update the old slider value
         self.prev_slider_val = value
 
-    
+    # Overwrites the attributes that are shared when moving the current frame to an existing keyframe
     def overwrite_same_keyframe_attribute(self, current_frame, slider_button_value, new_frame):
+        # Gets the first selected object
         obj = cmds.ls(selection=True)[0]
 
-        keyable_attrs = cmds.listAttr(obj, keyable=True) or []
+        # Gets a list of the keyable attributes of the object
+        keyable_attrs = cmds.listAttr(obj, keyable=True)
 
+        # Holds the attributes that have existing keyframes
         curr_keyed_attrs = []
 
+        # Iterate through the keyable attributes
         for attr in keyable_attrs:
+            # Check if a keyframe exists for the attribute at the current frame
             curr_attrs = cmds.keyframe(f"{obj}.{attr}", query=True, time=(current_frame, current_frame))
 
+            # If it exists add it to the list - (If pCube1.translateX exists add translateX to the list)
             if curr_attrs:
                 curr_keyed_attrs.append(attr)
 
+        # Checkes whether the button/slider value is positive or negative
         if slider_button_value < 0:
             pos_neg = -1
         else:
             pos_neg = 1
 
+        # Iterate through the attrs in the currently keyframed attributes list
         for attr in curr_keyed_attrs:
+            # Checks the time the user would move the keyframe to and queries its object.attr for existing keyframes
             keyframe_at_time = cmds.keyframe(f"{obj}.{attr}", query=True, time=(current_frame + pos_neg, current_frame + slider_button_value))
 
+            # If the attribute keyframe exists - i.e. is shared between current and new frame
             if keyframe_at_time:
+                # delete the existing attribute keyframe so it can be replaced with the new value using update_frame 
                 cmds.cutKey(obj, attribute=attr, time=(new_frame, new_frame))
             
                 
