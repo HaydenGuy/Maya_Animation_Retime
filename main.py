@@ -7,6 +7,7 @@ from maya import cmds
 import maya.api.OpenMaya as om
 import maya.OpenMayaUI as omui
 from maya.app.general.mayaMixin import MayaQWidgetDockableMixin
+import maya.mel as mel
 
 import Animation_Retime.UI.ui as ui
 
@@ -51,6 +52,27 @@ class Animation_Retime(MayaQWidgetDockableMixin, QWidget):
 
         self.UI.hoz_layout_btn.clicked.connect(self.setup_vert_window)
         self.UI.vert_layout_btn.clicked.connect(self.setup_hoz_window)
+
+        self.timeline = mel.eval("$gPlayBackSlider = $gPlayBackSlider")
+        self._initialize_callbacks()
+
+    def _initialize_callbacks(self):
+        cmds.timeControl(
+            self.timeline,
+            edit=True,
+            releaseCommand=self.on_release
+            )
+
+    def on_release(self, *args):
+        time = cmds.currentTime(query=True)
+        self.UI.slider.setValue(0)
+        self.UI.slider_label.setText("0")
+        cmds.currentTime(time)
+
+    def remove_callbacks(self):
+        """Remove the callbacks from the timeline."""
+        cmds.timeControl(self.timeline, edit=True, 
+                         releaseCommand="")
 
     """
         Whenever a selection is changed in Maya reset the slider and its label to 0
