@@ -34,7 +34,7 @@ class Animation_Retime(MayaQWidgetDockableMixin, QWidget):
         self.setWindowTitle("Animation Retime")
 
         # Register callback to listen for the SelectionChanged event and trigger selection_changed when it occurs
-        self.callback_id = om.MEventMessage.addEventCallback("SelectionChanged", self.selection_changed)
+        self.selection_changed_callback_id = om.MEventMessage.addEventCallback("SelectionChanged", self.selection_changed)
 
         self.UI.neg_100_btn.clicked.connect(self.button_pressed)
         self.UI.neg_50_btn.clicked.connect(self.button_pressed)
@@ -62,8 +62,8 @@ class Animation_Retime(MayaQWidgetDockableMixin, QWidget):
 
     # Removes the callback to stop listening for SelectionChanged
     def remove_callback(self):
-        if self.callback_id:
-            om.MMessage.removeCallback(self.callback_id)
+        if self.selection_changed_callback_id:
+            om.MMessage.removeCallback(self.selection_changed_callback_id)
 
     def button_pressed(self):
         # Checks which button was clicked
@@ -97,7 +97,7 @@ class Animation_Retime(MayaQWidgetDockableMixin, QWidget):
         """
             Decrease current frame time if prev slider value is less than new value
             Increase current frame time if prev slider value is greater than new value
-            If they are the same there is no increase so new frame must be current frame
+            If they are the same there is no increase so new frame must be current frame - run the overwrite same frame method
         """
         if self.prev_slider_val > value:
             new_frame = current_frame - time_change
@@ -105,7 +105,7 @@ class Animation_Retime(MayaQWidgetDockableMixin, QWidget):
             new_frame = current_frame + time_change
         else:
             new_frame = current_frame
-
+        
         # Overwrite attributes that share a keyframe
         self.overwrite_same_keyframe_attribute(current_frame, value, new_frame)
 
@@ -150,8 +150,7 @@ class Animation_Retime(MayaQWidgetDockableMixin, QWidget):
             if keyframe_at_time:
                 # delete the existing attribute keyframe so it can be replaced with the new value using update_frame 
                 cmds.cutKey(obj, attribute=attr, time=(new_frame, new_frame))
-            
-                
+                         
     """
         Updates the keyframe and current time
         Raise error if no object selected or frames go negative
@@ -169,7 +168,6 @@ class Animation_Retime(MayaQWidgetDockableMixin, QWidget):
         except TypeError: # When no object selected
             om.MGlobal.displayWarning("No object selected")
         # except RuntimeError: # When trying to move a keyframe over another - BROKEN
-            # self.check_keyed_frames_and_attributes(new_frame)
 
     # Setups a vertical window by closing and recreating a new Animation_Retime window
     def setup_vert_window(self):
