@@ -34,9 +34,6 @@ class Animation_Retime(MayaQWidgetDockableMixin, QWidget):
         self.layout().addWidget(self.UI)
         self.setWindowTitle("Animation Retime")
 
-        # Register callback to listen for the SelectionChanged event and trigger selection_changed when it occurs
-        self.selection_changed_callback_id = om.MEventMessage.addEventCallback("SelectionChanged", self.selection_changed)
-
         self.UI.neg_100_btn.clicked.connect(self.button_pressed)
         self.UI.neg_50_btn.clicked.connect(self.button_pressed)
         self.UI.neg_10_btn.clicked.connect(self.button_pressed)
@@ -53,39 +50,41 @@ class Animation_Retime(MayaQWidgetDockableMixin, QWidget):
         self.UI.hoz_layout_btn.clicked.connect(self.setup_vert_window)
         self.UI.vert_layout_btn.clicked.connect(self.setup_hoz_window)
 
+        # Get the the global playback slider from Maya
         self.timeline = mel.eval("$gPlayBackSlider = $gPlayBackSlider")
         self._initialize_callbacks()
 
+    # Initalize timeline released and selection changed callbacks
     def _initialize_callbacks(self):
-        cmds.timeControl(
-            self.timeline,
-            edit=True,
-            releaseCommand=self.on_release
-            )
+        # Call on_release when timeline is clicked and then released
+        cmds.timeControl(self.timeline, edit=True, releaseCommand=self.on_timeline_release)
 
-    def on_release(self, *args):
+        # Listen for the SelectionChanged event and trigger reset_slider when it occurs
+        self.selection_changed_callback_id = om.MEventMessage.addEventCallback("SelectionChanged", self.reset_slider)
+
+    # When timeline is released reset the QSlider and set the current time to the clicked position
+    def on_timeline_release(self, *args):
         time = cmds.currentTime(query=True)
-        self.UI.slider.setValue(0)
-        self.UI.slider_label.setText("0")
+        
+        self.reset_slider()
+
         cmds.currentTime(time)
 
+    # Remove callback if it was called
     def remove_callbacks(self):
-        """Remove the callbacks from the timeline."""
-        cmds.timeControl(self.timeline, edit=True, 
-                         releaseCommand="")
+        if self.timeline:
+            cmds.timeControl(self.timeline, edit=True, releaseCommand="")
 
-    """
-        Whenever a selection is changed in Maya reset the slider and its label to 0
-        *args is necessary to allow the method to take additional arguments
-    """
-    def selection_changed(self, *args):
-        self.UI.slider.setValue(0)
-        self.UI.slider_label.setText("0")
-
-    # Removes the callback to stop listening for SelectionChanged
-    def remove_callback(self):
         if self.selection_changed_callback_id:
             om.MMessage.removeCallback(self.selection_changed_callback_id)
+
+    # Resets the slider text, value, and handle position
+    def reset_slider(self):
+        try:
+            self.UI.slider.setValue(0)
+            self.UI.slider_label.setText("0")
+        except: # Ignore negative frames error 
+            pass
 
     def button_pressed(self):
         # Checks which button was clicked
