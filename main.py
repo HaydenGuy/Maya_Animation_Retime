@@ -100,10 +100,22 @@ class Animation_Retime(MayaQWidgetDockableMixin, QWidget):
         new_frame = current_frame + button_value 
 
         # Overwrite attributes that share a keyframe
-        self.overwrite_same_keyframe_attribute(current_frame, button_value, new_frame)
+        obj, attrs = self.overwrite_same_keyframe_attribute(current_frame, button_value, new_frame)
 
-        # Call update_frame to update the keyframes and current time
-        self.update_frame(current_frame, new_frame)
+        try:
+            # Call update_frame to update the keyframes and current time
+            self.update_frame(current_frame, new_frame)
+        except RuntimeError: # Occurs when moving keyframes over another
+            for attr in attrs:
+                """ 
+                    Iterate though the attributes in attrs
+                    Remove the keyframes of attributes from the object and current frame
+                    Set a new keyframe with those attributes at the new frame
+                    Update the current time
+                """
+                cmds.cutKey(obj, attribute=attr, time=(current_frame, current_frame))
+                cmds.setKeyframe(obj, attribute=attr, time=new_frame) 
+                cmds.currentTime(new_frame) 
 
     def slider_change(self, value):
         # Set the slider label text to slider value
@@ -128,10 +140,22 @@ class Animation_Retime(MayaQWidgetDockableMixin, QWidget):
             new_frame = current_frame
         
         # Overwrite attributes that share a keyframe
-        self.overwrite_same_keyframe_attribute(current_frame, value, new_frame)
+        obj, attrs = self.overwrite_same_keyframe_attribute(current_frame, value, new_frame)
 
-        # Call update_frame to update the keyframes and current time
-        self.update_frame(current_frame, new_frame)
+        try:
+            # Call update_frame to update the keyframes and current time
+            self.update_frame(current_frame, new_frame)
+        except RuntimeError: # Occurs when moving keyframes over another
+            for attr in attrs:
+                """ 
+                    Iterate though the attributes in attrs
+                    Remove the keyframes of attributes from the object and current frame
+                    Set a new keyframe with those attributes at the new frame
+                    Update the current time
+                """
+                cmds.cutKey(obj, attribute=attr, time=(current_frame, current_frame))
+                cmds.setKeyframe(obj, attribute=attr, time=new_frame) 
+                cmds.currentTime(new_frame) 
 
         # Update the old slider value
         self.prev_slider_val = value
@@ -171,7 +195,9 @@ class Animation_Retime(MayaQWidgetDockableMixin, QWidget):
             if keyframe_at_time:
                 # delete the existing attribute keyframe so it can be replaced with the new value using update_frame 
                 cmds.cutKey(obj, attribute=attr, time=(new_frame, new_frame))
-                         
+
+        return obj, curr_keyed_attrs
+
     """
         Updates the keyframe and current time
         Raise error if no object selected or frames go negative
@@ -188,7 +214,6 @@ class Animation_Retime(MayaQWidgetDockableMixin, QWidget):
                 cmds.currentTime(new_frame) 
         except TypeError: # When no object selected
             om.MGlobal.displayWarning("No object selected")
-        # except RuntimeError: # When trying to move a keyframe over another - BROKEN
 
     # Setups a vertical window by closing and recreating a new Animation_Retime window
     def setup_vert_window(self):
