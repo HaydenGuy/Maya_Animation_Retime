@@ -45,7 +45,7 @@ class Animation_Retime(MayaQWidgetDockableMixin, QWidget):
 
         self.prev_slider_val = 0
 
-        self.UI.slider.valueChanged.connect(self.slider_change)
+        self.UI.slider.sliderMoved.connect(self.slider_change)
 
         self.UI.hoz_layout_btn.clicked.connect(self.setup_vert_window)
         self.UI.vert_layout_btn.clicked.connect(self.setup_hoz_window)
